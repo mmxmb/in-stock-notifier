@@ -4,9 +4,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
 
 [packages]
 beautifulsoup4 = "*"
+pynamodb = "*"
+boto3 = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.7"

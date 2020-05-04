@@ -1,0 +1,8 @@
+{
+      "Template": {
+          "TemplateName": "in-stock-notification",
+          "SubjectPart": "[in-stock-notifier] Product is back in stock!",
+          "TextPart": "{{product_name}} is back in stock at {{store_name}}. Here is the link to buy it: {{url}}.",
+          "HtmlPart": "<h1>{{product_name}} is back in stock at {{store_name}}</h1><p>Here is the link to buy it: <a href=\"{{url}}\">{{url}}</a>.</p>"
+        }
+}

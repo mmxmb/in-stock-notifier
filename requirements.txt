@@ -1,0 +1,19 @@
+-i https://pypi.org/simple
+aiohttp==3.6.2
+async-timeout==3.0.1
+attrs==19.3.0
+beautifulsoup4==4.9.0
+boto3==1.13.2
+botocore==1.16.2
+chardet==3.0.4
+docutils==0.15.2
+idna==2.9
+jmespath==0.9.5
+multidict==4.7.5
+pynamodb==4.3.2
+python-dateutil==2.8.1
+s3transfer==0.3.3
+six==1.14.0
+soupsieve==2.0
+urllib3==1.25.9 ; python_version != '3.4'
+yarl==1.4.2

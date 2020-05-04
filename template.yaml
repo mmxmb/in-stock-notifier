@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: Notifies via email when a certain product is in stock in an online store
+Parameters:
+  Dev:
+    Description: "Boolean. If True, SES is not used and DynamoDB host is Docker"
+    Default: "False"
+    Type: String
+  EmailFrom:
+    Description: "Email address that is used in the From: field of a notification."
+    Type: String
+  EmailTo:
+    Description: "Email address that notifications are sent to"
+    Type: String
+Resources:
+  notifier:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: in_stock_notifier
+      CodeUri: in_stock_notifier/
+      Handler: handler.run_notifier
+      Runtime: python3.8 
+      MemorySize: 256
+      Timeout: 15 
+      ReservedConcurrentExecutions: 1
+      Tracing: Active
+      Environment:
+        Variables:
+          DEV: !Sub "${Dev}"
+          EMAIL_FROM: !Sub "${EmailFrom}" 
+          EMAIL_TO: !Sub "${EmailTo}"
+      Events:
+        cron:
+          Type: Schedule
+          Properties:
+            Schedule: rate(10 minutes)
+            Description: Checks if product is in stock every 10 minutes
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref notifications
+        - SESBulkTemplatedCrudPolicy:
+            IdentityName: !Sub "${EmailFrom}"
+  notifications:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions:
+        -
+          AttributeName: product_id
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: product_id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: in-stock-notifications
