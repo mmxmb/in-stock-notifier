@@ -23,7 +23,7 @@ Get an email notification when a product is back in stock in your online store o
 
 ## Getting Started
 
-This project uses several AWS services ([DynamoDB](https://aws.amazon.com/dynamodb/), [Lambda](https://aws.amazon.com/lambda/), [SES](https://aws.amazon.com/ses/)), therefore, you need an AWS account to use it.
+This project uses several AWS services ([DynamoDB](https://aws.amazon.com/dynamodb/), [Lambda](https://aws.amazon.com/lambda/), [SES](https://aws.amazon.com/ses/)), therefore you need an AWS account to use it.
 
 AWS free tier should be sufficient for this project. Here you can review free tier conditions for [DynamoDB](https://aws.amazon.com/dynamodb/pricing/on-demand/), [https://aws.amazon.com/lambda/pricing/](https://aws.amazon.com/lambda/pricing/) and [SES](https://aws.amazon.com/ses/pricing/).
 
@@ -56,9 +56,9 @@ _If you use the same email in To and From fields, it is possible that you will s
 
 ### Tracking New Product 
 
-Create a new line in [products.csv](./in_stock_notifier/products.csv). There are only two columns per file that need to be created: first the Product Name (used in the email notification), and the second one with the product URL.
+Create a new line in [products.csv](./in_stock_notifier/products.csv). There are only two columns per file that need to be created: first the Product Name (used in the email notification), and second the product URL.
 
-After the product is added to the CSV, deploy the Lambda function with: `make deploy` (if you don't have `make`, just use the `sam deploy` command from the [Makefile](./Makefile).
+After the product is added to the CSV, deploy the Lambda function with: `make deploy` (if you don't have `make`, just use the `sam deploy` command from the [Makefile](./Makefile)).
 
 You need to set `EMAIL_FROM` and `EMAIL_TO` environment variables before deploying using email addresses that were verified during [SES Setup](#ses-setup). So, the final command will look like this:
 
@@ -82,17 +82,15 @@ The best way to create a new store interface is to first view this store's produ
 
 ![in-stock-notifier architecture](./assets/arch.png)
 
-in-stock-notifier is an AWS Lambda function that functions as a cron job that gets invoked every 10 minutes. A DynamoDB table is used to track whether a notification has already been sent for a product. If the product appears to be in stock and a notification has not been already sent, SES is used to send it; then the item in the table is updated to reflect that.
+in-stock-notifier is an AWS Lambda function that functions as a cron job that gets invoked every 10 minutes. A DynamoDB table is used to track whether a notification has already been sent for a product. If the product appears to be in stock and a notification has not been already sent, SES is used to send it; then the the table is updated to reflect that.
 
-On each function invokation, a [products.csv](./in_stock_notifier/products.csv).
-
-The table gets populated only when the notification is 
+The table gets populated only when a product appears to be in stock.
 
 ## Local Development
 
 A local lambda function (inside a Docker container) can be used for development.
 
-* `make invoke-dev` - invoke the local lambda function and use local instance of DynamoDB (see [Local DynamoDB](#local-dynamodb). SES is not used but you will see in the logs if an email would have been sent.
+* `make invoke-dev` - invoke the local lambda function and use local instance of DynamoDB (see [Local DynamoDB](#local-dynamodb)). SES is not used but you will see in the logs if an email would have been sent.
 * `make invoke-prod` - invoke the local lambda function and use the production instance of DynamoDB. SES will be used to send an actual email notification.
 * `make deploy` - deploy the lambda function. The end result is identical to what you would see with `make invoke-prod` but the function will be executed by AWS, not local machine, every 10 minutes.
 
